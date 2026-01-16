@@ -1,10 +1,27 @@
 # AI-Friendly Code Packer
 
+https://reactorcore.itch.io/ai-code-packer-turn-your-project-into-txt-for-ai-chats
+
+![codepacker_cover](https://github.com/user-attachments/assets/a3b73aac-97ce-42aa-a69d-71e48529eac4)
+
 A powerful web application that helps developers package their codebase into AI-friendly formats for seamless interaction with AI assistants like Claude, ChatGPT, and others.
 
 ## 🎯 Purpose
 
 Transform your entire project into a single, well-structured text output that AI models can easily understand and work with. Perfect for getting AI assistance on coding tasks, code reviews, debugging, and architectural discussions.
+
+**Screenshots:**
+
+<img width="1920" height="1080" alt="codepacker screenshot (1)" src="https://github.com/user-attachments/assets/6d059d45-dfa0-4d85-85db-3451a7d72282" />
+
+---
+<img width="1920" height="1080" alt="codepacker screenshot (2)" src="https://github.com/user-attachments/assets/04bd5148-86d8-4bd5-a596-fa74910eff39" />
+
+---
+<img width="1920" height="1080" alt="codepacker screenshot (3)" src="https://github.com/user-attachments/assets/b276bff5-b4bd-40e5-b2e0-50a172fc2e29" />
+
+---
+<img width="1920" height="1080" alt="codepacker screenshot (4)" src="https://github.com/user-attachments/assets/5cdd034a-a028-43c0-aba5-bec91e67f98c" />
 
 ## ✨ Key Features
 
