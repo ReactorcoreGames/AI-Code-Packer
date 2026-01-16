@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Packer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>AI-Friendly Code Packer to Txt</h1>
+                <p class="subtitle">Convert your codebase into AI-friendly context for better AI interactions</p>
+            </div>
+            <button id="help-btn" class="btn">Help Guide</button>
+        </header>
+
+        <main>
+            <section id="file-input" class="card">
+                <div class="project-header">
+                    <h2>Project Selection</h2>
+                    <div class="mini-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Files</div>
+                            <div class="stat-value" id="total-files">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Lines</div>
+                            <div class="stat-value" id="total-lines">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Size</div>
+                            <div class="stat-value" id="project-size">0 KB</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Tokens</div>
+                            <div class="stat-value" id="token-count">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="project-folder" webkitdirectory directory multiple>
+                    <button class="btn" onclick="document.getElementById('project-folder').click()">
+                        Choose Project Folder
+                    </button>
+                </div>
+                <div id="folder-status" class="status-message"></div>
+            </section>
+
+            <section id="exclusion-section" class="card" style="display: none;">
+                <div class="exclusion-header" onclick="toggleExclusionSection()">
+                    <h2>File & Folder Exclusions</h2>
+                    <span class="collapse-indicator">▼</span>
+                </div>
+                <div id="exclusion-content" class="exclusion-content">
+                    <div id="folder-tree" class="folder-tree"></div>
+                </div>
+            </section>
+
+			<section id="output" class="card">
+				<div class="section-header">
+					<h2>AI-Friendly Text Output</h2>
+					<div class="button-group">
+						<button id="download-btn" class="btn" disabled>Download txt</button>
+						<button id="copy-btn" class="btn" disabled>Copy to Clipboard</button>
+					</div>
+				</div>
+				<textarea id="output-text" class="output-area" readonly></textarea>
+			</section>
+        </main>
+
+        <div id="help-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>About AI Code Packer</h2>
+                <div class="help-content">
+                    <h3>Purpose</h3>
+                    <p>AI Code Packer condenses your code project into a single, AI-friendly text file for easy context sharing with AI models. This makes it simple to discuss your entire codebase with AI assistants while maintaining the full context of your project.</p>
+                    
+                    <h3>Target Users</h3>
+                    <p>Developers who want to have meaningful discussions about their projects with AI and need a compact, organized representation of their codebase as context.</p>
+                    
+                    <h3>How to Use</h3>
+                    <ol>
+                        <li>Click "Choose Project Folder" to select your project directory on your PC.</li>
+                        <li>The packed code will automatically generate in the output area.</li>
+                        <li>Use "Copy to Clipboard" to paste directly into your AI chat.</li>
+                        <li>Or "Download txt" to save the packed code as txt file attachment.</li>
+                    </ol>
+                    
+                    <h3>Tips</h3>
+                    <ul>
+                        <li>Select the root folder of your project to include all necessary files.</li>
+                        <li>The packed output maintains your original folder structure.</li>
+                        <li>It will even list and include images, media and other files, though only txt-based files will be shown.</li>
+                        <li>Use this output when you need to give AI context about your entire project.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Created by <a href="http://www.reactorcoregames.com" target="_blank" rel="noopener noreferrer">Reactorcore Games</a></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

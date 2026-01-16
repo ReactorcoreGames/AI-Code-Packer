@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Packer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>AI Code Packer</h1>
+                <p class="subtitle">Scrunch your codebase into a single context file for AI conversations</p>
+            </div>
+        </header>
+
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="upload">
+                <span class="tab-icon">📁</span>
+                <span class="tab-label">1. Upload</span>
+            </button>
+            <button class="tab-btn" data-tab="filter">
+                <span class="tab-icon">🔍</span>
+                <span class="tab-label">2. Filter</span>
+            </button>
+            <button class="tab-btn" data-tab="export">
+                <span class="tab-icon">💾</span>
+                <span class="tab-label">3. Export</span>
+            </button>
+            <button class="tab-btn" data-tab="help">
+                <span class="tab-icon">❓</span>
+                <span class="tab-label">Help</span>
+            </button>
+        </nav>
+
+        <main>
+            <!-- Upload Tab -->
+            <section id="upload-tab" class="tab-content active">
+                <div class="card">
+                    <h2>Project Selection</h2>
+                    <p class="tab-description">Choose your project folder to begin packing your code for AI analysis.</p>
+                    <div class="form-group">
+                        <input type="file" id="project-folder" webkitdirectory directory multiple>
+                        <button class="btn btn-large" onclick="document.getElementById('project-folder').click()">
+                            📁 Choose Project Folder
+                        </button>
+                    </div>
+                    <div id="folder-status" class="status-message"></div>
+
+                    <div class="instructions">
+                        <h3>Quick Start</h3>
+                        <ol>
+                            <li>Click the button above to select your project's root folder</li>
+                            <li>The app will automatically scan and process your files</li>
+                            <li>Move to the Filter tab to customize which files to include</li>
+                            <li>Use Preview to see the packed output</li>
+                            <li>Finally, Export your packed code for AI usage</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filter Tab -->
+            <section id="filter-tab" class="tab-content">
+                <div class="card">
+                    <h2>Filtering Options</h2>
+                    <p class="tab-description">Customize which files and folders to include in your packed output.</p>
+
+                    <!-- Preset Profiles -->
+                    <div class="filter-section">
+                        <h3>Quick Presets <span class="tooltip">ℹ️<span class="tooltiptext">Quick filters to include only specific file types. Choose what matters most for your AI conversation.</span></span></h3>
+                        <div class="preset-buttons">
+                            <button class="btn btn-preset" data-preset="code-only" title="Include only programming code files (.js, .py, .java, etc.)">Code Only</button>
+                            <button class="btn btn-preset" data-preset="code-docs" title="Include code files plus documentation (.md, .txt, etc.)">Code + Docs</button>
+                            <button class="btn btn-preset" data-preset="code-config" title="Include code files plus configuration files (.json, .yaml, etc.)">Code + Config</button>
+                            <button class="btn btn-preset" data-preset="docs-only" title="Include only documentation files (.md, .txt, .rst, etc.)">Docs Only</button>
+                            <button class="btn btn-preset" data-preset="code-media-list" title="Include code files and list media files (images/videos won't show content)">Code + Media List</button>
+                            <button class="btn btn-preset" data-preset="media-list-only" title="List only media files (images, audio, video)">Media List Only</button>
+                            <button class="btn btn-preset" data-preset="full" title="Include all files in your project">Full Project</button>
+                        </div>
+                    </div>
+
+                    <!-- Project Statistics -->
+                    <div class="filter-section">
+                        <h3>Project Statistics <span class="tooltip">ℹ️<span class="tooltiptext">Real-time stats showing what will be included in your export. Tokens measure how much AI context space your code will use.</span></span></h3>
+                        <div class="filter-stats">
+                            <div class="filter-stat-item" title="Number of files currently selected">
+                                <span class="filter-stat-label">Files:</span>
+                                <span class="filter-stat-value" id="total-files">0</span>
+                            </div>
+                            <div class="filter-stat-item" title="Total lines of code across all selected files">
+                                <span class="filter-stat-label">Lines:</span>
+                                <span class="filter-stat-value" id="total-lines">0</span>
+                            </div>
+                            <div class="filter-stat-item" title="Total file size of selected files">
+                                <span class="filter-stat-label">Size:</span>
+                                <span class="filter-stat-value" id="project-size">0 KB</span>
+                            </div>
+                            <div class="filter-stat-item" title="Estimated AI tokens - keep this under your AI's context limit">
+                                <span class="filter-stat-label">Tokens:</span>
+                                <span class="filter-stat-value" id="token-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Tree -->
+                    <div class="filter-section">
+                        <h3>File & Folder Selection</h3>
+                        <p class="helper-text">Check or uncheck files and folders to include or exclude them.</p>
+                        <div id="folder-tree" class="folder-tree"></div>
+                        <div id="no-files-message" class="info-message">
+                            No project loaded. Please upload a project folder in the Upload tab first.
+                        </div>
+                    </div>
+
+                    <!-- Custom Patterns -->
+                    <div class="filter-section">
+                        <h3>Custom Exclusion Patterns <span class="tooltip">ℹ️<span class="tooltiptext">Use glob patterns to exclude files. One pattern per line. See the Help tab for detailed examples.</span></span></h3>
+                        <p class="helper-text">Enter glob patterns to exclude specific files or folders. See Help tab for detailed guide.</p>
+                        <textarea id="custom-patterns" class="pattern-input" placeholder="*.log&#10;test/**&#10;**/backup/*"></textarea>
+                        <button id="apply-patterns-btn" class="btn">Apply Patterns</button>
+                        <div id="pattern-status" class="pattern-status"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Export Tab -->
+            <section id="export-tab" class="tab-content">
+                <div class="card">
+                    <h2>Export Your Code</h2>
+                    <p class="tab-description">Choose your format, copy or download, and preview your packed code.</p>
+
+                    <!-- Output Format Selection -->
+                    <div class="format-section">
+                        <h3>1. Choose Format <span class="tooltip">ℹ️<span class="tooltiptext">Different formats work better with different AI assistants. Simple Text is recommended for most users.</span></span></h3>
+                        <p class="helper-text">Pick the format that works best for your needs.</p>
+                        <div class="format-selector">
+                            <label class="format-option" title="Best for most AI assistants - plain text format">
+                                <input type="radio" name="output-format" value="plain" checked>
+                                <div class="format-card">
+                                    <div class="format-name">Simple Text</div>
+                                    <div class="format-description">Easy to read, works everywhere</div>
+                                </div>
+                            </label>
+                            <label class="format-option" title="Structured XML format with CDATA sections">
+                                <input type="radio" name="output-format" value="xml">
+                                <div class="format-card">
+                                    <div class="format-name">XML</div>
+                                    <div class="format-description">Structured data format</div>
+                                </div>
+                            </label>
+                            <label class="format-option" title="Machine-readable JSON format">
+                                <input type="radio" name="output-format" value="json">
+                                <div class="format-card">
+                                    <div class="format-name">JSON</div>
+                                    <div class="format-description">Machine-readable format</div>
+                                </div>
+                            </label>
+                            <label class="format-option" title="Markdown format with collapsible sections">
+                                <input type="radio" name="output-format" value="markdown">
+                                <div class="format-card">
+                                    <div class="format-name">Markdown</div>
+                                    <div class="format-description">Formatted with collapsible sections</div>
+                                </div>
+                            </label>
+                            <label class="format-option" title="Shows only folder structure without file contents">
+                                <input type="radio" name="output-format" value="tree">
+                                <div class="format-card">
+                                    <div class="format-name">File Tree</div>
+                                    <div class="format-description">Visual folder structure overview</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Export Actions -->
+                    <div class="format-section">
+                        <h3>2. Export</h3>
+                        <div class="export-actions">
+                            <button id="copy-btn" class="btn btn-large btn-primary" disabled>
+                                📋 Copy to Clipboard
+                            </button>
+                            <button id="download-btn" class="btn btn-large" disabled>
+                                💾 <span id="download-btn-text">Download</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div class="format-section">
+                        <h3>3. Preview</h3>
+                        <p class="helper-text">Check your packed code before using it with AI.</p>
+                        <textarea id="output-text" class="output-area" readonly></textarea>
+                        <div id="preview-empty-message" class="info-message">
+                            No output generated yet. Please upload a project folder in the Upload tab.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help Tab -->
+            <section id="help-tab" class="tab-content">
+                <div class="card">
+                    <h2>How to Use AI Code Packer</h2>
+                    <div class="help-content">
+                        <h3>What Does This Tool Do?</h3>
+                        <p>AI Code Packer combines all your code files into one organized text file that you can share with AI assistants like ChatGPT, Claude, or Gemini. Instead of copying and pasting files one by one, you get everything packaged neatly in seconds.</p>
+
+                        <h3>Quick Start Guide</h3>
+                        <ol>
+                            <li><strong>Upload:</strong> Click "Choose Project Folder" and select your project's main folder</li>
+                            <li><strong>Filter:</strong> Pick a preset (like "Code Only") or manually choose which files to include</li>
+                            <li><strong>Export:</strong> Copy the result and paste it into your AI chat, or download it as a file</li>
+                        </ol>
+
+                        <h3>What Are "Tokens"?</h3>
+                        <p><strong>Tokens</strong> are how AI assistants measure text. Think of them like "chunks of words" - roughly 1 token = 4 characters, or about 750 tokens per page of text.</p>
+
+                        <p><strong>Why they matter:</strong> Every AI has a <em>context limit</em> - a maximum amount of text it can read at once. If your packed code has too many tokens, the AI won't be able to read all of it.</p>
+
+                        <p><strong>Common AI Context Limits (as of 2025):</strong></p>
+                        <ul>
+                            <li><strong>ChatGPT (GPT-4):</strong> 32K-128K tokens depending on version</li>
+                            <li><strong>Claude (Sonnet/Opus):</strong> 200K tokens</li>
+                            <li><strong>Gemini Pro:</strong> 32K-128K tokens</li>
+                        </ul>
+
+                        <h3>Token Color Guide</h3>
+                        <ul>
+                            <li><span class="token-indicator token-green" style="background: #e8f5e9; color: #43a047;">Green (Under 8K)</span> - Perfect! Works with any AI</li>
+                            <li><span class="token-indicator token-yellow" style="background: #fff9c4; color: #f9a825;">Yellow (8K-32K)</span> - Good for most projects</li>
+                            <li><span class="token-indicator token-orange" style="background: #ffe0b2; color: #fb8c00;">Orange (32K-100K)</span> - Large project, check your AI's limit</li>
+                            <li><span class="token-indicator token-red" style="background: #ffcdd2; color: #e53935;">Red (100K+)</span> - Too big for most AIs, filter more files</li>
+                        </ul>
+
+                        <h3>Tips for Best Results</h3>
+                        <ul>
+                            <li><strong>Start with presets:</strong> Use "Code Only" or "Code + Docs" to exclude unnecessary files</li>
+                            <li><strong>Watch the token count:</strong> Keep it under your AI's limit (check the Filter tab)</li>
+                            <li><strong>Text files only:</strong> Images and media will be listed but their content won't be included</li>
+                            <li><strong>Use Simple Text format:</strong> It works with all AI assistants (recommended for beginners)</li>
+                            <li><strong>Paste directly:</strong> After copying, just paste into your AI chat - it's ready to go!</li>
+                        </ul>
+
+                        <h3>Common Questions</h3>
+                        <p><strong>Q: Can I use this with any AI?</strong><br>
+                        A: Yes! The Simple Text format works with ChatGPT, Claude, Gemini, and any other AI assistant.</p>
+
+                        <p><strong>Q: What if my project is too big?</strong><br>
+                        A: Use the Filter tab to uncheck folders like tests, documentation, or config files you don't need.</p>
+
+                        <p><strong>Q: Is my code uploaded anywhere?</strong><br>
+                        A: No! Everything happens in your browser. Your code never leaves your computer unless you choose to copy/download it.</p>
+
+                        <h3>Custom Exclusion Patterns - Complete Guide</h3>
+                        <p>Exclusion patterns let you filter out files using flexible matching rules called "glob patterns". Think of them like search terms with wildcards.</p>
+
+                        <h4>Basic Symbols</h4>
+                        <ul>
+                            <li><code>*</code> - Matches any characters in a single file/folder name (but not slashes)</li>
+                            <li><code>**</code> - Matches any number of folders deep</li>
+                            <li><code>?</code> - Matches exactly one character</li>
+                        </ul>
+
+                        <h4>Pattern Examples (Step-by-Step)</h4>
+                        <p><strong><code>*.log</code></strong><br>
+                        Excludes all files ending with .log anywhere in your project<br>
+                        <em>Examples: error.log, debug.log, app.log</em></p>
+
+                        <p><strong><code>*.min.js</code></strong><br>
+                        Excludes all minified JavaScript files<br>
+                        <em>Examples: jquery.min.js, app.min.js</em></p>
+
+                        <p><strong><code>test/**</code></strong><br>
+                        Excludes the entire "test" folder and everything inside it<br>
+                        <em>Examples: test/unit.js, test/helpers/mock.js, test/data/sample.json</em></p>
+
+                        <p><strong><code>**/test/**</code></strong><br>
+                        Excludes any "test" folder at any level in your project<br>
+                        <em>Examples: src/test/file.js, lib/utils/test/helper.js</em></p>
+
+                        <p><strong><code>**/backup/*</code></strong><br>
+                        Excludes all files directly inside any "backup" folder (but not subfolders)<br>
+                        <em>Examples: backup/old.js, src/backup/data.json</em></p>
+
+                        <p><strong><code>**/*.backup</code></strong><br>
+                        Excludes all .backup files anywhere in your project<br>
+                        <em>Examples: config.backup, src/utils/helper.backup</em></p>
+
+                        <p><strong><code>temp-*</code></strong><br>
+                        Excludes any file or folder starting with "temp-"<br>
+                        <em>Examples: temp-data.json, temp-backup/</em></p>
+
+                        <p><strong><code>draft?.txt</code></strong><br>
+                        Excludes files like draft1.txt, draft2.txt, draftA.txt (one character after "draft")<br>
+                        <em>Examples: draft1.txt, draft9.txt, draftX.txt</em></p>
+
+                        <h4>How to Use</h4>
+                        <ol>
+                            <li>Go to the <strong>Filter</strong> tab</li>
+                            <li>Scroll to <strong>Custom Exclusion Patterns</strong></li>
+                            <li>Type one pattern per line in the text box</li>
+                            <li>Click <strong>Apply Patterns</strong></li>
+                            <li>Check the file tree to see what got excluded</li>
+                        </ol>
+
+                        <h4>Real-World Examples</h4>
+                        <p>To exclude logs, caches, and temporary files:</p>
+                        <pre style="background: #f0f0f0; padding: 0.8rem; border-radius: 4px; overflow-x: auto;">*.log
+*.cache
+**/temp/**
+**/.DS_Store
+**/Thumbs.db</pre>
+
+                        <p>To exclude all test and build output files:</p>
+                        <pre style="background: #f0f0f0; padding: 0.8rem; border-radius: 4px; overflow-x: auto;">**/test/**
+**/tests/**
+**/dist/**
+**/build/**
+**/*.test.js
+**/*.spec.js</pre>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Created by <a href="https://linktr.ee/reactorcore" target="_blank" rel="noopener noreferrer">Reactorcore Games</a></p>
+        </footer>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
