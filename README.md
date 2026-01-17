@@ -1,7 +1,7 @@
 # AI-Friendly Code Packer
 
-Mirror 1: https://reactorcoregames.github.io/AI-Code-Packer/
-Mirror 2: https://reactorcore.itch.io/ai-code-packer
+- Mirror 1: https://reactorcoregames.github.io/AI-Code-Packer/
+- Mirror 2: https://reactorcore.itch.io/ai-code-packer
 
 ![codepacker_cover](https://github.com/user-attachments/assets/a3b73aac-97ce-42aa-a69d-71e48529eac4)
 
